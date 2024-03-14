@@ -1,0 +1,116 @@
+﻿@model List<Property>
+
+<h1 style="text-align:center"> Our Property</h1>
+@if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+{
+<div class="text-center m-2">
+    <br><a class="btn btn-primary" style="text-align=center" asp-action="Create">Create New Property</a>
+</div>
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var Prop in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@Prop.PropertyImg" class="card-img-top" alt="Property Image" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Location: @Prop.Address</h5>
+                        <p class="card-text">Price: @Prop.Price</p>
+                        <p class="card-text">City: @Prop.city.Name</p>
+                        <p class="card-text">Features: @Prop.Features</p>
+                        <div class="btn-group d-flex" role="group" aria-label="Property Actions">
+                            <a class="mr-2 btn btn-primary" asp-action="Details" asp-route-id="@Prop.Id">Details</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                            {
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Prop.Id">Edit</a>
+                                @if (Prop.propertyStatus.status == "Available" || Prop.propertyStatus.status == "Under Contract")
+                                {
+                                    <a class="btn btn-dark" asp-action="Delete" asp-route-id="@Prop.Id">Delete</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+     @* pagination *@
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            
+                @if (ViewBag.pageNum > 1)
+                {<li class="page-item">
+                    <a class="page-link" href="/Properity/Index/@(ViewBag.pageNum - 1)">Previous</a>
+                </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                    <span class="page-link disabled" aria-disabled="true">Previous</span>
+                    </li>
+                }
+
+            
+            @for (int i = 1; i <= ViewBag.totalPages; i++)
+            {
+                <li class="page-item @(ViewBag.pageNum == i ? "active" : "")"><a class="page-link" href="/Properity/Index/@i" aria-current="page">@i</a></li>
+            }
+            
+            
+                @if (ViewBag.pageNum < ViewBag.totalPages)
+                {
+                    <li class="page-item">
+                    <a class="page-link" href="/Properity/Index/@(ViewBag.pageNum + 1)">Next</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                    <span class="page-link" aria-disabled="true">Next</span>
+                    </li>
+                }
+            
+        </ul>
+    </nav>
+
+
+
+</div>
+
+
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        font-family: Arial, sans-serif;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    .card-title {
+        font-size: 18px; 
+        font-weight: bold; 
+        color: #333; 
+    }
+
+    .card-text {
+        font-size: 14px;
+        color: #666; 
+    }
+
+    .btn {
+        font-size: 14px; 
+    }
+</style>

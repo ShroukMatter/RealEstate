@@ -1,0 +1,42 @@
+﻿@model List<Contract>
+<h1 style="text-align:center"> Contracts </h1>
+<div class="text-center m-2">
+<a class="btn btn-primary mb-2" asp-action="New" >Create Contract</a>
+</div>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr class="bg-dark text-light fw-bold">
+            <td>
+                Property Name
+            </td>
+            <td>
+                Employee Name
+            </td>
+            <td>
+                Client Name
+            </td>
+            <td>
+                Actions
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+       @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.property.Address</td>
+                <td>@item.employee.Name</td>
+                <td>@item.client.Name</td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (item.property.propertyStatus.status == "Rented")
+                    {
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
